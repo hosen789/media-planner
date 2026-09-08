@@ -1,0 +1,6 @@
+{
+  "name": "مدیا پلنر هوشمند",
+  "description": "سامانه هوشمند تدوین کمپین مارکتینگ، پلن رسانه‌ای کانال‌های تلگرام، تعرفه‌های تولید و انتشار و تحلیل زنده ROI",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
