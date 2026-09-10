@@ -6,15 +6,24 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Apartment
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Festival
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -25,13 +34,13 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -57,114 +66,88 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                     val state by viewModel.uiState.collectAsStateWithLifecycle()
-
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
+                        containerColor = MaterialTheme.colorScheme.background,
                         contentWindowInsets = WindowInsets.safeDrawing,
                         topBar = {
                             CenterAlignedTopAppBar(
                                 title = {
-                                    Text(
-                                        text = "مدیا پلنر هوشمند برند و رسانه",
-                                        style = MaterialTheme.typography.titleMedium.copy(
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 17.sp
-                                        )
-                                    )
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Surface(
+                                            modifier = Modifier.size(38.dp),
+                                            shape = RoundedCornerShape(12.dp),
+                                            color = MaterialTheme.colorScheme.primaryContainer,
+                                        ) {
+                                            Box(contentAlignment = Alignment.Center) {
+                                                Icon(
+                                                    Icons.Default.AutoAwesome,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary,
+                                                    modifier = Modifier.size(21.dp),
+                                                )
+                                            }
+                                        }
+                                        Spacer(Modifier.width(10.dp))
+                                        Column(horizontalAlignment = Alignment.Start) {
+                                            Text("Media Planner", fontWeight = FontWeight.ExtraBold, fontSize = 17.sp)
+                                            Text("مدیا پلنر هوشمند برند و رسانه", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        }
+                                        Spacer(Modifier.width(10.dp))
+                                        Row(
+                                            modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer, CircleShape).padding(horizontal = 9.dp, vertical = 5.dp),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                        ) {
+                                            Box(Modifier.size(7.dp).background(MaterialTheme.colorScheme.primary, CircleShape))
+                                            Spacer(Modifier.width(5.dp))
+                                            Text("AI", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                                        }
+                                    }
                                 },
                                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                                    containerColor = MaterialTheme.colorScheme.surface
-                                )
+                                    containerColor = MaterialTheme.colorScheme.background,
+                                    scrolledContainerColor = MaterialTheme.colorScheme.surface,
+                                ),
                             )
                         },
                         bottomBar = {
                             NavigationBar(
                                 modifier = Modifier.testTag("main_navigation_bar"),
                                 containerColor = MaterialTheme.colorScheme.surface,
-                                tonalElevation = 6.dp
+                                tonalElevation = 2.dp,
                             ) {
-                                NavigationBarItem(
-                                    selected = state.selectedTab == 0,
-                                    onClick = { viewModel.setTab(0) },
-                                    icon = { Icon(Icons.Default.Apartment, contentDescription = "اطلاعات برند") },
-                                    label = { Text("اطلاعات برند", fontSize = 11.sp, fontWeight = FontWeight.SemiBold) },
-                                    colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                                        selectedTextColor = MaterialTheme.colorScheme.primary
-                                    )
+                                val items = listOf(
+                                    Triple(Icons.Default.Apartment, "برند", "اطلاعات برند"),
+                                    Triple(Icons.Default.Festival, "استراتژی", "استراتژی و سناریو"),
+                                    Triple(Icons.Default.Campaign, "رسانه", "پلن رسانه‌ای"),
+                                    Triple(Icons.AutoMirrored.Filled.TrendingUp, "ROI", "تحلیل ROI"),
                                 )
-
-                                NavigationBarItem(
-                                    selected = state.selectedTab == 1,
-                                    onClick = { viewModel.setTab(1) },
-                                    icon = { Icon(Icons.Default.Festival, contentDescription = "استراتژی و سناریو") },
-                                    label = { Text("استراتژی و سناریو", fontSize = 11.sp, fontWeight = FontWeight.SemiBold) },
-                                    colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                                        selectedTextColor = MaterialTheme.colorScheme.primary
+                                items.forEachIndexed { index, item ->
+                                    NavigationBarItem(
+                                        selected = state.selectedTab == index,
+                                        onClick = { viewModel.setTab(index) },
+                                        icon = { Icon(item.first, contentDescription = item.third) },
+                                        label = { Text(item.second, fontSize = 11.sp, fontWeight = FontWeight.SemiBold) },
+                                        colors = NavigationBarItemDefaults.colors(
+                                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                                            indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                                        ),
                                     )
-                                )
-
-                                NavigationBarItem(
-                                    selected = state.selectedTab == 2,
-                                    onClick = { viewModel.setTab(2) },
-                                    icon = { Icon(Icons.Default.Campaign, contentDescription = "پلن رسانه‌ای") },
-                                    label = { Text("پلن رسانه‌ای", fontSize = 11.sp, fontWeight = FontWeight.SemiBold) },
-                                    colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                                        selectedTextColor = MaterialTheme.colorScheme.primary
-                                    )
-                                )
-
-                                NavigationBarItem(
-                                    selected = state.selectedTab == 3,
-                                    onClick = { viewModel.setTab(3) },
-                                    icon = { Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = "تحلیل ROI") },
-                                    label = { Text("تحلیل ROI", fontSize = 11.sp, fontWeight = FontWeight.SemiBold) },
-                                    colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                                        selectedTextColor = MaterialTheme.colorScheme.primary
-                                    )
-                                )
+                                }
                             }
-                        }
+                        },
                     ) { innerPadding ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(innerPadding)
-                        ) {
+                        Box(Modifier.fillMaxSize().padding(innerPadding)) {
                             when (state.selectedTab) {
-                                0 -> BrandIntakeScreen(
-                                    viewModel = viewModel,
-                                    profile = state.brandProfile,
-                                    onNavigateToPlan = { viewModel.setTab(1) }
-                                )
-                                1 -> state.currentPlan?.let { plan ->
-                                    StrategicPlanScreen(
-                                        viewModel = viewModel,
-                                        plan = plan,
-                                        aiState = state.aiState,
-                                        onNavigateToMediaPlan = { viewModel.setTab(2) }
-                                    )
-                                }
-                                2 -> MediaPlanScreen(
-                                    viewModel = viewModel,
-                                    channels = state.selectedChannels,
-                                    productionItems = state.productionItems,
-                                    searchQuery = state.channelSearchQuery,
-                                    selectedCategory = state.selectedCategoryFilter,
-                                    targetBudget = state.brandProfile.budget,
-                                    brandName = state.brandProfile.brandName,
-                                    onNavigateToRoi = { viewModel.setTab(3) }
-                                )
-                                3 -> state.currentPlan?.let { plan ->
-                                    RoiAnalyticsScreen(
-                                        viewModel = viewModel,
-                                        plan = plan,
-                                        showExportDialog = state.showExportDialog
-                                    )
-                                }
+                                0 -> BrandIntakeScreen(viewModel, state.brandProfile) { viewModel.setTab(1) }
+                                1 -> state.currentPlan?.let { StrategicPlanScreen(viewModel, it, state.aiState) { viewModel.setTab(2) } }
+                                2 -> MediaPlanScreen(viewModel, state.selectedChannels, state.productionItems, state.channelSearchQuery, state.selectedCategoryFilter, state.brandProfile.budget, state.brandProfile.brandName) { viewModel.setTab(3) }
+                                3 -> state.currentPlan?.let { RoiAnalyticsScreen(viewModel, it, state.showExportDialog) }
                             }
                         }
                     }
