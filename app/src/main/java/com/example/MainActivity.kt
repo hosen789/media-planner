@@ -84,12 +84,7 @@ class MainActivity : ComponentActivity() {
                                             color = MaterialTheme.colorScheme.primaryContainer,
                                         ) {
                                             Box(contentAlignment = Alignment.Center) {
-                                                Icon(
-                                                    Icons.Default.AutoAwesome,
-                                                    contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.primary,
-                                                    modifier = Modifier.size(21.dp),
-                                                )
+                                                Icon(Icons.Default.AutoAwesome, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(21.dp))
                                             }
                                         }
                                         Spacer(Modifier.width(10.dp))
@@ -115,11 +110,7 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         bottomBar = {
-                            NavigationBar(
-                                modifier = Modifier.testTag("main_navigation_bar"),
-                                containerColor = MaterialTheme.colorScheme.surface,
-                                tonalElevation = 2.dp,
-                            ) {
+                            NavigationBar(modifier = Modifier.testTag("main_navigation_bar"), containerColor = MaterialTheme.colorScheme.surface, tonalElevation = 2.dp) {
                                 val items = listOf(
                                     Triple(Icons.Default.Apartment, "برند", "اطلاعات برند"),
                                     Triple(Icons.Default.Festival, "استراتژی", "استراتژی و سناریو"),
@@ -144,10 +135,23 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                         Box(Modifier.fillMaxSize().padding(innerPadding)) {
                             when (state.selectedTab) {
-                                0 -> BrandIntakeScreen(viewModel, state.brandProfile) { viewModel.setTab(1) }
-                                1 -> state.currentPlan?.let { StrategicPlanScreen(viewModel, it, state.aiState) { viewModel.setTab(2) } }
-                                2 -> MediaPlanScreen(viewModel, state.selectedChannels, state.productionItems, state.channelSearchQuery, state.selectedCategoryFilter, state.brandProfile.budget, state.brandProfile.brandName) { viewModel.setTab(3) }
-                                3 -> state.currentPlan?.let { RoiAnalyticsScreen(viewModel, it, state.showExportDialog) }
+                                0 -> BrandIntakeScreen(viewModel = viewModel, profile = state.brandProfile, onNavigateToPlan = { viewModel.setTab(1) })
+                                1 -> state.currentPlan?.let {
+                                    StrategicPlanScreen(viewModel = viewModel, plan = it, aiState = state.aiState, onNavigateToMediaPlan = { viewModel.setTab(2) })
+                                }
+                                2 -> MediaPlanScreen(
+                                    viewModel = viewModel,
+                                    selectedChannels = state.selectedChannels,
+                                    productionItems = state.productionItems,
+                                    channelSearchQuery = state.channelSearchQuery,
+                                    selectedCategoryFilter = state.selectedCategoryFilter,
+                                    budget = state.brandProfile.budget,
+                                    brandName = state.brandProfile.brandName,
+                                    onNavigateToRoi = { viewModel.setTab(3) },
+                                )
+                                3 -> state.currentPlan?.let {
+                                    RoiAnalyticsScreen(viewModel = viewModel, plan = it, showExportDialog = state.showExportDialog)
+                                }
                             }
                         }
                     }
