@@ -1,0 +1,48 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:translateX="0"
+        android:translateY="0">
+        <!-- Growth Chart Bars -->
+        <path
+            android:fillColor="#4ADE80"
+            android:pathData="M32,68 L38,68 L38,52 L32,52 Z" />
+        <path
+            android:fillColor="#38BDF8"
+            android:pathData="M42,68 L48,68 L48,42 L42,42 Z" />
+        <path
+            android:fillColor="#FBBF24"
+            android:pathData="M52,68 L58,68 L58,34 L52,34 Z" />
+        <path
+            android:fillColor="#F43F5E"
+            android:pathData="M62,68 L68,68 L68,28 L62,28 Z" />
+
+        <!-- Trend Line with Arrow -->
+        <path
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="3.2"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:fillColor="#00000000"
+            android:pathData="M30,58 L45,46 L55,38 L72,25" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M76,23 L66,23 L73,30 Z" />
+
+        <!-- Base Platform -->
+        <path
+            android:fillColor="#E2E8F0"
+            android:pathData="M26,72 C26,70.9 26.9,70 28,70 L76,70 C77.1,70 78,70.9 78,72 C78,73.1 77.1,74 76,74 L28,74 C26.9,74 26,73.1 26,72 Z" />
+
+        <!-- Broadcast Waves / Sparkles -->
+        <path
+            android:fillColor="#FCD34D"
+            android:pathData="M78,38 L80,33 L85,35 L81,40 Z" />
+        <path
+            android:fillColor="#6EE7B7"
+            android:pathData="M24,44 L27,41 L29,46 L26,48 Z" />
+    </group>
+</vector>
