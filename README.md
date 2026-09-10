@@ -1,42 +1,22 @@
-# Media Planner
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+</div>
 
-اپلیکیشن Android برای طراحی و تحلیل پلن رسانه‌ای با قابلیت اتصال به Gemini.
+# Run and deploy your AI Studio app
 
-## اجرای آنلاین Gemini در اپ
+This contains everything you need to run your app locally.
 
-این پروژه برای درخواست‌های Gemini به اینترنت نیاز دارد. Workflow ساخت APK به‌صورت خودکار مجوز `INTERNET` را در پروژه استخراج‌شده بررسی و در صورت نیاز اضافه می‌کند.
+View your app in AI Studio: https://ai.studio/apps/bf46aa93-a76a-437b-8816-e8bbaccea2b5
 
-### تنظیم کلید Gemini در GitHub Actions
+## Run Locally
 
-کلید واقعی Gemini را داخل کد یا `project.zip` قرار ندهید.
+**Prerequisites:**  [Android Studio](https://developer.android.com/studio)
 
-در GitHub:
 
-**Settings → Secrets and variables → Actions → New repository secret**
-
-نام Secret را دقیقاً این بگذارید:
-
-`GEMINI_API_KEY`
-
-سپس APK را از طریق GitHub Actions بسازید. Workflow کلید را فقط هنگام Build به فایل `.env` می‌دهد.
-
-اگر Secret تنظیم نشده باشد، Build ممکن است موفق شود اما درخواست‌های Gemini در APK کار نخواهند کرد.
-
-## اجرای محلی
-
-**Prerequisites:** Android Studio
-
-1. پروژه را استخراج و در Android Studio باز کنید.
-2. فایل `.env` بسازید:
-
-```env
-GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-```
-
-3. اگر `debugConfig` مربوط به AI Studio در پروژه وجود دارد، خط signing آن را برای Build محلی حذف کنید.
-4. دستگاه یا Emulator را به اینترنت وصل کنید.
-5. برنامه را اجرا کنید و درخواست Gemini را تست کنید.
-
-## نکته امنیتی
-
-کلید Gemini را در GitHub repository، کد Kotlin، APK یا چت عمومی قرار ندهید. برای نسخه تولیدی، استفاده از Firebase AI Logic همراه با App Check گزینه امن‌تری برای اتصال Gemini از داخل اپ موبایل است. Firebase AI Logic برای Android به‌طور رسمی SDK و لایه proxy ارائه می‌کند و می‌تواند کلید Gemini را خارج از کد اپ نگه دارد.
+1. Open Android Studio
+2. Select **Open** and choose the directory containing this project
+3. Allow Android Studio to fix any incompatibilities as it imports the project.
+4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
+5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
+6. Run the app on an emulator or physical device
+7. If you have already published your app in AI Studio, please [request upload key reset](https://support.google.com/googleplay/android-developer/answer/9842756#zippy=%2Crequest-an-upload-key-reset) in Google Play Console.
