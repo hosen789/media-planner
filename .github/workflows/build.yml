@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,6 +19,8 @@ jobs:
       - name: Prepare Android Project
         id: prep
         shell: bash
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           set -euo pipefail
 
@@ -47,8 +52,40 @@ jobs:
             sed -i '/signingConfig = signingConfigs\.getByName("debugConfig")/d' app/build.gradle.kts
           fi
 
-          # Create the environment file expected by the project.
-          printf '%s\n' 'GEMINI_API_KEY=dummy_key' > .env
+          # Android apps need INTERNET permission for Gemini/HTTP requests.
+          # Add it automatically to the extracted project if it is missing.
+          MANIFEST="app/src/main/AndroidManifest.xml"
+          if [ ! -f "$MANIFEST" ]; then
+            echo "CRITICAL: $MANIFEST not found."
+            find app/src -maxdepth 5 -type f -print
+            exit 1
+          fi
+
+          if ! grep -q 'android.permission.INTERNET' "$MANIFEST"; then
+            echo "Adding INTERNET permission..."
+            python3 - <<'PY'
+          from pathlib import Path
+          p = Path("app/src/main/AndroidManifest.xml")
+          s = p.read_text(encoding="utf-8")
+          marker = 'android.permission.INTERNET'
+          if marker not in s:
+              pos = s.find('>')
+              if pos == -1:
+                  raise SystemExit("Invalid AndroidManifest.xml: no opening tag found")
+              s = s[:pos+1] + '\n    <uses-permission android:name="android.permission.INTERNET" />' + s[pos+1:]
+              p.write_text(s, encoding="utf-8")
+          PY
+          fi
+
+          # Gemini key is supplied as a GitHub Actions secret.
+          # Never hard-code a real key into the repository.
+          if [ -n "${GEMINI_API_KEY:-}" ]; then
+            printf '%s\n' "GEMINI_API_KEY=${GEMINI_API_KEY}" > .env
+            echo "Gemini API key configured from GitHub Actions secret."
+          else
+            printf '%s\n' 'GEMINI_API_KEY=dummy_key' > .env
+            echo "WARNING: GEMINI_API_KEY secret is not configured; APK will build but Gemini calls will not work."
+          fi
 
           echo "project_path=." >> "$GITHUB_OUTPUT"
 
