@@ -141,11 +141,11 @@ class MainActivity : ComponentActivity() {
                                 }
                                 2 -> MediaPlanScreen(
                                     viewModel = viewModel,
-                                    selectedChannels = state.selectedChannels,
+                                    channels = state.selectedChannels,
                                     productionItems = state.productionItems,
-                                    channelSearchQuery = state.channelSearchQuery,
-                                    selectedCategoryFilter = state.selectedCategoryFilter,
-                                    budget = state.brandProfile.budget,
+                                    searchQuery = state.channelSearchQuery,
+                                    selectedCategory = state.selectedCategoryFilter,
+                                    targetBudget = state.brandProfile.budget,
                                     brandName = state.brandProfile.brandName,
                                     onNavigateToRoi = { viewModel.setTab(3) },
                                 )
