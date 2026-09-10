@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -27,10 +27,22 @@ jobs:
           echo "=== Files in Repository ==="
           ls -la
 
-          # The actual Android project is stored in project.zip.
+          # The actual Android project may be stored in project.zip.
+          # Extract it into the repository so the full source is available
+          # directly in GitHub for future development.
           if [ -f "project.zip" ]; then
             echo "Extracting project.zip..."
             unzip -o "project.zip"
+
+            echo "Committing extracted Android source to main..."
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add app gradle public build.gradle.kts gradle.properties settings.gradle.kts metadata.json .env.example .gitignore README.md
+            git rm -f project.zip
+            if ! git diff --cached --quiet; then
+              git commit -m "Extract Android project source"
+              git push origin HEAD:main
+            fi
           fi
 
           if [ ! -f "settings.gradle.kts" ] || [ ! -d "app" ]; then
