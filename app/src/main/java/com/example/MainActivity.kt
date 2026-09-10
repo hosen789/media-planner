@@ -62,6 +62,7 @@ private data class NavItem(
     val icon: androidx.compose.ui.graphics.vector.ImageVector,
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AppTopBar(selectedTab: Int) {
     val subtitles = listOf("شناخت و تعریف برند", "استراتژی، روایت و سناریو", "انتخاب رسانه و مدیریت بودجه", "سنجش بازده و اقتصاد کمپین")
